@@ -1,0 +1,11 @@
+﻿
+@{
+    ViewData["Title"] = "POC1";
+}
+
+<h2>POC1</h2>
+
+@foreach (var msg in ViewData["Message"] as IEnumerable<string>)
+{
+    <li> @msg </li>
+}
