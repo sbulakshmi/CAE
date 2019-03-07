@@ -13,7 +13,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CAE.Helpers.X12\CAE.Helpers.X12.csproj" />
     <ProjectReference Include="..\Edi.Templates.Hipaa5010\Edi.Templates.Hipaa5010.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EdiFabric.Templates.Hipaa">
+      <HintPath>..\Edi.Templates.Hipaa5010\Library\EdiFabric.Templates.Hipaa.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

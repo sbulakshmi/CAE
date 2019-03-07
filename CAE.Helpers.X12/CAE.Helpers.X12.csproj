@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EdiFabric.Core" Version="9.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="EdiFabric.Templates.Hipaa">
+      <HintPath>..\Edi.Templates.Hipaa5010\Library\EdiFabric.Templates.Hipaa.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

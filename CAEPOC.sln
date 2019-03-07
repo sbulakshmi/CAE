@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CAEPOC", "CAEPOC\CAEPOC.csproj", "{0791BE50-0972-4B47-A7E2-92457478933C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Edi.Templates.Hipaa5010", "Edi.Templates.Hipaa5010\Edi.Templates.Hipaa5010.csproj", "{008774E7-D0A8-49B2-A241-2F7EABA7C287}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Edi.Templates.Hipaa5010", "Edi.Templates.Hipaa5010\Edi.Templates.Hipaa5010.csproj", "{008774E7-D0A8-49B2-A241-2F7EABA7C287}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CAE.Helpers.X12", "CAE.Helpers.X12\CAE.Helpers.X12.csproj", "{FDFF09B1-9C07-40A9-AB27-2867F13E2E30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{008774E7-D0A8-49B2-A241-2F7EABA7C287}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{008774E7-D0A8-49B2-A241-2F7EABA7C287}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{008774E7-D0A8-49B2-A241-2F7EABA7C287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDFF09B1-9C07-40A9-AB27-2867F13E2E30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDFF09B1-9C07-40A9-AB27-2867F13E2E30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDFF09B1-9C07-40A9-AB27-2867F13E2E30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDFF09B1-9C07-40A9-AB27-2867F13E2E30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
