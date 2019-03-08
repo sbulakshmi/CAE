@@ -125,6 +125,31 @@ namespace CAEPOC.Controllers
             ts277Data.Loop2000A[0].Loop2000B[0].Loop2000C[0].Loop2000D[0].Loop2100D.NM1_SubscriberName.IdentificationCodeQualifier_08 = data.Loop2000A[0].Loop2000B[0].AllNM1.Loop2010BA.NM1_SubscriberName.IdentificationCodeQualifier_08;
             ts277Data.Loop2000A[0].Loop2000B[0].Loop2000C[0].Loop2000D[0].Loop2100D.NM1_SubscriberName.ResponseContactIdentifier_09 = data.Loop2000A[0].Loop2000B[0].AllNM1.Loop2010BA.NM1_SubscriberName.ResponseContactIdentifier_09;
 
+            loop2000D1.Loop2200D = new List<Loop_2200D_277>();
+
+            
+            //  Begin 2200D Loop
+            var loop2200D = new Loop_2200D_277();
+            loop2000D1.Loop2200D.Add(loop2200D);
+            var stc1 = new STC_BillingProviderStatusInformation();
+            stc1.HealthCareClaimStatus_01 = new C043_HealthCareClaimStatus();
+            loop2200D.STC_ClaimLevelStatusInformation = new List<STC_BillingProviderStatusInformation>();
+            loop2200D.STC_ClaimLevelStatusInformation.Add(stc1);
+            //ex STC*R4:18657-7::LOI*2*3*4*5*6*7*8*9*R4:18803-7::LOI~
+            stc1.HealthCareClaimStatus_01.HealthCareClaimStatusCategoryCode_01 = "R4";
+            stc1.HealthCareClaimStatus_01.StatusCode_02 = "18657-7";
+            stc1.HealthCareClaimStatus_01.CodeListQualifierCode_04 = "LOI";
+
+            stc1.HealthCareClaimStatus_10 = new C043_HealthCareClaimStatus();
+            stc1.HealthCareClaimStatus_10.HealthCareClaimStatusCategoryCode_01 = "R4";
+            stc1.HealthCareClaimStatus_10.StatusCode_02 = "18803-7";
+            stc1.HealthCareClaimStatus_10.CodeListQualifierCode_04 = "LOI";
+            // stc1.HealthCareClaimStatus_11 = "";
+            loop2200D.AllREF = new All_REF_277();
+            loop2200D.AllREF.REF_PatientControlNumber = new REF_PatientControlNumber();
+            loop2200D.AllREF.REF_PatientControlNumber.MemberGrouporPolicyNumber_02 = data.Loop2000A[0].Loop2000B[0].Loop2300[0].CLM_ClaimInformation.PatientControlNumber_01;
+
+
             return ts277Data;
         }
 
