@@ -137,12 +137,12 @@ namespace CAEPOC.Controllers
             loop2200D.STC_ClaimLevelStatusInformation.Add(stc1);
             //ex STC*R4:18657-7::LOI*2*3*4*5*6*7*8*9*R4:18803-7::LOI~
             stc1.HealthCareClaimStatus_01.HealthCareClaimStatusCategoryCode_01 = "R4";
-            stc1.HealthCareClaimStatus_01.StatusCode_02 = "18657-7";
+            stc1.HealthCareClaimStatus_01.StatusCode_02 = "19016-5";// 18657-7";
             stc1.HealthCareClaimStatus_01.CodeListQualifierCode_04 = "LOI";
 
             stc1.HealthCareClaimStatus_10 = new C043_HealthCareClaimStatus();
             stc1.HealthCareClaimStatus_10.HealthCareClaimStatusCategoryCode_01 = "R4";
-            stc1.HealthCareClaimStatus_10.StatusCode_02 = "18803-7";
+            stc1.HealthCareClaimStatus_10.StatusCode_02 = "18594-2";//"18803-7";
             stc1.HealthCareClaimStatus_10.CodeListQualifierCode_04 = "LOI";
             // stc1.HealthCareClaimStatus_11 = "";
             loop2200D.AllREF = new All_REF_277();
