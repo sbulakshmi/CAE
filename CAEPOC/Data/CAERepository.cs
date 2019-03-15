@@ -1,5 +1,6 @@
 ﻿using CAEPOC.Interfaces;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,18 @@ namespace CAEPOC.Data
                 throw ex;
             }
         }
+        public async Task AddT277(EdiFabric.Templates.Hipaa5010.TS277 item)
+        {
+            try
+            {
+                await _context.T277.InsertOneAsync(item);
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw ex;
+            }
+        }
         //public async Task<string> GetLOINCCode4CPTCode(string cptCode)
         public string GetLOINCCode4CPTCode(string cptCode)
         {
@@ -47,6 +60,27 @@ namespace CAEPOC.Data
                 throw ex;
             }
         }
+
+        public long GetNextSequence(string code)
+        {
+            try
+            {
+
+                // int code = int.Parse(cptCode);
+                // string code = cptCode;
+                var counterQuery = Builders<Models.Counter>.Filter.Eq("Id", code);
+                var option = new FindOneAndUpdateOptions<Models.Counter, Models.Counter> { IsUpsert=true, ReturnDocument = ReturnDocument.After };
+                var result = _context.Counters.FindOneAndUpdate(counterQuery, Builders<Models.Counter>.Update.Inc("Value", 1), option);
+                return result.Value;
+
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw ex;
+            }
+        }
+
 
     }
 }

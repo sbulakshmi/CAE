@@ -83,13 +83,10 @@ namespace CAEPOC.Controllers
                 }
                 else
                 {//check and generate 277
-                 // var document = new BsonDocument()
-                 //  var objCollection = _db.GetCollection<Edi.Templates.Hipaa5010.TS837P>("settings");
-                 //  objCollection.InsertOne(transaction);
-                 //   _cAERepository.AddT837PClaim(transaction);
-
-                   var r = Get277(transaction);
-
+                    _cAERepository.AddT837PClaim(transaction);
+                    var t = Get277(transaction);
+                    _cAERepository.AddT277(t);
+                    var r = Get277Edi(t);
                 }
             }
             ViewData["Message"] = consolidatedErrors;
@@ -163,6 +160,8 @@ namespace CAEPOC.Controllers
             stc1.HealthCareClaimStatus_01.StatusCode_02 = GetCPT2Loinc(data.Loop2000A[0].Loop2000B[0].Loop2300[0].Loop2400[0].SV1_ProfessionalService.CompositeMedicalProcedureIdentifier_01.ProcedureCode_02);//"19016-5";// 18657-7";
             stc1.HealthCareClaimStatus_01.CodeListQualifierCode_04 = "LOI";
 
+            stc1.Date_02 =  String.Format("{0:yyyyMMdd}", System.DateTime.UtcNow.AddDays(30) );
+
             stc1.HealthCareClaimStatus_10 = new C043_HealthCareClaimStatus();
             stc1.HealthCareClaimStatus_10.HealthCareClaimStatusCategoryCode_01 = "R4";
             stc1.HealthCareClaimStatus_10.StatusCode_02 = "18594-2";//"18803-7";
@@ -181,12 +180,31 @@ namespace CAEPOC.Controllers
             return _cAERepository.GetLOINCCode4CPTCode(CptCode);//.Result.FirstOrDefault().ToString();
         }
 
-        private string Get277(Edi.Templates.Hipaa5010.TS837P ts837Data=null)
+        private TS277 Get277(Edi.Templates.Hipaa5010.TS837P ts837Data=null)
         {
             TS277 input277Data = new TS277();
             input277Data = FetchData277(ts837Data);
+            long cntlNum= _cAERepository.GetNextSequence("trnId");
+            var transaction = HipaaTransactionBuilders.Build277ResponseTransmission(cntlNum.ToString(), input277Data);
+            //using (var stream = new MemoryStream())
+            //{
+            //    using (var writer = new X12Writer(stream))
+            //    {
+            //        writer.Write(SegmentBuilders.BuildIsa("1"));
+            //        writer.Write(SegmentBuilders.BuildGs("1"));
+            //        writer.Write(transaction);
+            //    }
 
-            var transaction = HipaaTransactionBuilders.Build277ResponseTransmission("1", input277Data);
+            //    var ediString = stream.LoadToString();
+            //    return ediString;
+            //}
+            return transaction;
+
+        }
+
+        private string Get277Edi(TS277 ts277)
+        {
+            var transaction = ts277;
             using (var stream = new MemoryStream())
             {
                 using (var writer = new X12Writer(stream))
@@ -201,7 +219,6 @@ namespace CAEPOC.Controllers
             }
 
         }
-
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";

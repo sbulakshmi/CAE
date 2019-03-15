@@ -32,5 +32,20 @@ namespace CAEPOC.Data
                 return _database.GetCollection<CPT2Loinc>("CPT2Loinc");
             }
         }
+        public IMongoCollection<EdiFabric.Templates.Hipaa5010.TS277> T277
+        {
+            get
+            {
+                return _database.GetCollection<EdiFabric.Templates.Hipaa5010.TS277>("T277");
+            }
+        }
+
+        public IMongoCollection<Counter> Counters
+        {
+            get
+            {
+                return _database.GetCollection<Counter>("Counter");
+            }
+        }
     }
 }
