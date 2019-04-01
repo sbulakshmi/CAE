@@ -5,11 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Settings.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ediFabric.Core" Version="9.8.3" />
     <PackageReference Include="ediFabric.Framework" Version="9.8.3" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.8.0" />
   </ItemGroup>
 
   <ItemGroup>

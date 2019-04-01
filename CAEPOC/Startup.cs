@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CAEPOC.Data;
+using CAEPOC.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +11,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 
 namespace CAEPOC
 {
@@ -31,6 +34,17 @@ namespace CAEPOC
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.Configure<Settings>(
+            options =>
+            {
+                options.ConnectionString = Configuration.GetSection("MongoDb:ConnectionString").Value;
+                options.Database = Configuration.GetSection("MongoDb:Database").Value;
+            });
+
+            services.AddTransient<ICAEDBContext, CAEDBContext>();
+            services.AddTransient<ICAERepository, CAERepository>();
+            services.AddSingleton<IMongoClient, MongoClient>(
+               _ => new MongoClient(Configuration.GetSection("MongoDb:ConnectionString").Value));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

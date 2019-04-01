@@ -14,18 +14,33 @@ using System.Text;
 using EdiFabric.Framework.Writers;
 using CAE.Helpers.X12;
 using EdiFabric.Templates.Hipaa5010;
+using CAEPOC.Interfaces;
+//using MongoDB.Driver;
+//using Microsoft.Extensions.Options;
+//using MongoDB.Bson;
 
 namespace CAEPOC.Controllers
 {
     public class HomeController : Controller
     {
         private IHostingEnvironment _hostingEnvironment;
-        public HomeController(IHostingEnvironment environment)
+        private readonly ICAERepository _cAERepository;
+
+        //private readonly IMongoDatabase _db;
+        //private readonly IMongoClient client;
+
+        //public HomeController(IHostingEnvironment environment, IOptions<Settings> options)
+        public HomeController(IHostingEnvironment environment, ICAERepository cAERepository)
         {
             _hostingEnvironment = environment;
+            _cAERepository = cAERepository;
+            //client = new MongoClient(options.Value.ConnectionString);
+            //_db = client.GetDatabase(options.Value.Database);
+            //var collection = _db.GetCollection<BsonDocument>("settings");
         }
         public IActionResult Index()
         {
+
             return View();
         }
 
@@ -47,6 +62,7 @@ namespace CAEPOC.Controllers
 
             //  var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\ClaimPaymentWithError.txt"));
             var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\sampleEDIFile.txt"));
+          //  var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\837_5010X222A1.X12"));
 
 
             using (var ediReader = new X12Reader(hipaaStream, "Edi.Templates.Hipaa5010"))
@@ -56,6 +72,7 @@ namespace CAEPOC.Controllers
 
             foreach (var transaction in hipaaTransactions)
             {
+                var js = Newtonsoft.Json.JsonConvert.SerializeObject(transaction);
                 if (transaction.HasErrors)
                 {
                     //  partially parsed
@@ -65,7 +82,12 @@ namespace CAEPOC.Controllers
                 }
                 else
                 {//check and generate 277
-                    var r = Get277(transaction);
+                 // var document = new BsonDocument()
+                 //  var objCollection = _db.GetCollection<Edi.Templates.Hipaa5010.TS837P>("settings");
+                 //  objCollection.InsertOne(transaction);
+                    _cAERepository.AddT837PClaim(transaction);
+
+                //    var r = Get277(transaction);
 
                 }
             }
