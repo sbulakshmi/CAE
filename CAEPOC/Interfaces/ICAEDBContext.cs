@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using CAEPOC.Models;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,7 @@ namespace CAEPOC.Interfaces
     public interface ICAEDBContext
     {
         IMongoCollection<Edi.Templates.Hipaa5010.TS837P> T837PClaims { get; }
+        IMongoCollection<CPT2Loinc> CPT2Loincs { get; }
+
     }
 }

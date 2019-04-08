@@ -1,5 +1,6 @@
 ﻿using CAEPOC.Interfaces;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,23 @@ namespace CAEPOC.Data
             try
             {
                 await _context.T837PClaims.InsertOneAsync(item);
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw ex;
+            }
+        }
+        //public async Task<string> GetLOINCCode4CPTCode(string cptCode)
+        public string GetLOINCCode4CPTCode(string cptCode)
+        {
+            try
+            {
+               // int code = int.Parse(cptCode);
+                // string code = cptCode;
+                return _context.CPT2Loincs
+                                .Find(cpt2Loinc => cpt2Loinc.TOEXPR == cptCode)
+                                .FirstOrDefault()?.FROMEXPR;
             }
             catch (Exception ex)
             {

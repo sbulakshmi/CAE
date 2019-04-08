@@ -61,8 +61,9 @@ namespace CAEPOC.Controllers
             //var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\Hipaa005010ClaimPayment.txt"));
 
             //  var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\ClaimPaymentWithError.txt"));
-            var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\sampleEDIFile.txt"));
-          //  var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\837_5010X222A1.X12"));
+            //var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\sampleEDIFile.txt"));
+            var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\sampleEDIFileEditedCPT.txt"));
+            //  var hipaaStream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\837_5010X222A1.X12"));
 
 
             using (var ediReader = new X12Reader(hipaaStream, "Edi.Templates.Hipaa5010"))
@@ -85,9 +86,9 @@ namespace CAEPOC.Controllers
                  // var document = new BsonDocument()
                  //  var objCollection = _db.GetCollection<Edi.Templates.Hipaa5010.TS837P>("settings");
                  //  objCollection.InsertOne(transaction);
-                    _cAERepository.AddT837PClaim(transaction);
+                 //   _cAERepository.AddT837PClaim(transaction);
 
-                //    var r = Get277(transaction);
+                   var r = Get277(transaction);
 
                 }
             }
@@ -95,7 +96,7 @@ namespace CAEPOC.Controllers
             return View();
         }
 
-        static TS277 FetchData277(Edi.Templates.Hipaa5010.TS837P data = null)
+        private TS277 FetchData277(Edi.Templates.Hipaa5010.TS837P data = null)
         {
             TS277 ts277Data = new TS277();
             ts277Data.Loop2000A = new List<Loop_2000A_277>();
@@ -159,7 +160,7 @@ namespace CAEPOC.Controllers
             loop2200D.STC_ClaimLevelStatusInformation.Add(stc1);
             //ex STC*R4:18657-7::LOI*2*3*4*5*6*7*8*9*R4:18803-7::LOI~
             stc1.HealthCareClaimStatus_01.HealthCareClaimStatusCategoryCode_01 = "R4";
-            stc1.HealthCareClaimStatus_01.StatusCode_02 = "19016-5";// 18657-7";
+            stc1.HealthCareClaimStatus_01.StatusCode_02 = GetCPT2Loinc(data.Loop2000A[0].Loop2000B[0].Loop2300[0].Loop2400[0].SV1_ProfessionalService.CompositeMedicalProcedureIdentifier_01.ProcedureCode_02);//"19016-5";// 18657-7";
             stc1.HealthCareClaimStatus_01.CodeListQualifierCode_04 = "LOI";
 
             stc1.HealthCareClaimStatus_10 = new C043_HealthCareClaimStatus();
@@ -175,7 +176,12 @@ namespace CAEPOC.Controllers
             return ts277Data;
         }
 
-        static string Get277(Edi.Templates.Hipaa5010.TS837P ts837Data=null)
+        private  string GetCPT2Loinc(string CptCode)
+        {
+            return _cAERepository.GetLOINCCode4CPTCode(CptCode);//.Result.FirstOrDefault().ToString();
+        }
+
+        private string Get277(Edi.Templates.Hipaa5010.TS837P ts837Data=null)
         {
             TS277 input277Data = new TS277();
             input277Data = FetchData277(ts837Data);

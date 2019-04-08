@@ -1,4 +1,5 @@
 ﻿using CAEPOC.Interfaces;
+using CAEPOC.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System;
@@ -22,6 +23,13 @@ namespace CAEPOC.Data
             get
             {
                 return _database.GetCollection<Edi.Templates.Hipaa5010.TS837P>("T837PClaim");
+            }
+        }
+        public IMongoCollection<CPT2Loinc> CPT2Loincs
+        {
+            get
+            {
+                return _database.GetCollection<CPT2Loinc>("CPT2Loinc");
             }
         }
     }

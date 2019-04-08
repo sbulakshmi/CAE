@@ -8,5 +8,7 @@ namespace CAEPOC.Interfaces
     public interface ICAERepository
     {
         Task AddT837PClaim(Edi.Templates.Hipaa5010.TS837P item);
+        //Task <String> GetLOINCCode4CPTCode(string cptCode);
+        String GetLOINCCode4CPTCode(string cptCode);
     }
 }
