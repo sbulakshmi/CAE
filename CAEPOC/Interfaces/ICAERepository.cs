@@ -12,6 +12,7 @@ namespace CAEPOC.Interfaces
         //Task <String> GetLOINCCode4CPTCode(string cptCode);
         Task AddT277(EdiFabric.Templates.Hipaa5010.TS277 item);
         String GetLOINCCode4CPTCode(string cptCode);
+        Task<List<string>> GetRequestCodes(string cptCode);
         long GetNextSequence(string code);
     }
 }

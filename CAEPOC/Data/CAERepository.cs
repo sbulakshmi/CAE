@@ -61,6 +61,40 @@ namespace CAEPOC.Data
             }
         }
 
+        public async Task<List<string>> GetRequestCodes(string cptCode)
+        {
+            try
+            {
+                // int code = int.Parse(cptCode);
+                // string code = cptCode;
+                List<string> reqCode = new List<string>();
+                Action<string> add = x => { if (!String.IsNullOrEmpty(x)) reqCode.Add(x); };
+
+                add(_context.CPT2Loincs
+                                .Find(cpt2Loinc => cpt2Loinc.TOEXPR == cptCode)
+                                .FirstOrDefault()?.FROMEXPR);
+
+                await _context.CustomCPTLoincMappings
+                        .Find(cpt2Loinc => cpt2Loinc.cptCode == cptCode || cpt2Loinc.cptCode == "*")
+                        .ForEachAsync(x => add(x.LOINC));
+
+                //add("18776-5");
+                //add("18776-5");
+                return reqCode;
+                // return new List<string> { "18776-5 ", "80745-3", "90823" };
+                //return _context.CPT2Loincs
+                //                .Find(cpt2Loinc => cpt2Loinc.TOEXPR == cptCode)
+                //                .FirstOrDefault()?.FROMEXPR;
+            }
+            catch (Exception ex)
+            {
+                // log or manage the exception
+                throw ex;
+            }
+        }
+
+       
+
         public long GetNextSequence(string code)
         {
             try

@@ -84,13 +84,19 @@ namespace CAEPOC.Controllers
                 else
                 {//check and generate 277
                     _cAERepository.AddT837PClaim(transaction);
-                    var t = Get277(transaction);
+                    (TS277 t, long ctrlNum) = Get277(transaction);
                     _cAERepository.AddT277(t);
                     var r = Get277Edi(t);
+                    Save277Edi(r, ctrlNum);
                 }
             }
             ViewData["Message"] = consolidatedErrors;
             return View();
+        }
+
+        private void Save277Edi(string r, long ctrlNum)
+        {
+           System.IO.File.WriteAllTextAsync(Path.Combine(_hostingEnvironment.WebRootPath, $"Upload\\277\\Output\\{ctrlNum}.edi"),r);
         }
 
         private TS277 FetchData277(Edi.Templates.Hipaa5010.TS837P data = null)
@@ -151,21 +157,28 @@ namespace CAEPOC.Controllers
             //  Begin 2200D Loop
             var loop2200D = new Loop_2200D_277();
             loop2000D1.Loop2200D.Add(loop2200D);
-            var stc1 = new STC_BillingProviderStatusInformation();
-            stc1.HealthCareClaimStatus_01 = new C043_HealthCareClaimStatus();
             loop2200D.STC_ClaimLevelStatusInformation = new List<STC_BillingProviderStatusInformation>();
-            loop2200D.STC_ClaimLevelStatusInformation.Add(stc1);
-            //ex STC*R4:18657-7::LOI*2*3*4*5*6*7*8*9*R4:18803-7::LOI~
-            stc1.HealthCareClaimStatus_01.HealthCareClaimStatusCategoryCode_01 = "R4";
-            stc1.HealthCareClaimStatus_01.StatusCode_02 = GetCPT2Loinc(data.Loop2000A[0].Loop2000B[0].Loop2300[0].Loop2400[0].SV1_ProfessionalService.CompositeMedicalProcedureIdentifier_01.ProcedureCode_02);//"19016-5";// 18657-7";
-            stc1.HealthCareClaimStatus_01.CodeListQualifierCode_04 = "LOI";
 
-            stc1.Date_02 =  String.Format("{0:yyyyMMdd}", System.DateTime.UtcNow.AddDays(30) );
+            //get the list of LOINC codes and add a request for each
+            foreach (string reqCode in GetRequestCodes(data.Loop2000A[0].Loop2000B[0].Loop2300[0].Loop2400[0].SV1_ProfessionalService.CompositeMedicalProcedureIdentifier_01.ProcedureCode_02).Result.Distinct())
+            {
+                var stc1 = new STC_BillingProviderStatusInformation();
+                stc1.HealthCareClaimStatus_01 = new C043_HealthCareClaimStatus();
+                loop2200D.STC_ClaimLevelStatusInformation.Add(stc1);
+                //ex STC*R4:18657-7::LOI*2*3*4*5*6*7*8*9*R4:18803-7::LOI~
+                stc1.HealthCareClaimStatus_01.HealthCareClaimStatusCategoryCode_01 = "R4";
+                stc1.HealthCareClaimStatus_01.StatusCode_02 = reqCode;// GetCPT2Loinc(data.Loop2000A[0].Loop2000B[0].Loop2300[0].Loop2400[0].SV1_ProfessionalService.CompositeMedicalProcedureIdentifier_01.ProcedureCode_02);//"19016-5";// 18657-7";
+                stc1.HealthCareClaimStatus_01.CodeListQualifierCode_04 = "LOI";
 
-            stc1.HealthCareClaimStatus_10 = new C043_HealthCareClaimStatus();
-            stc1.HealthCareClaimStatus_10.HealthCareClaimStatusCategoryCode_01 = "R4";
-            stc1.HealthCareClaimStatus_10.StatusCode_02 = "18594-2";//"18803-7";
-            stc1.HealthCareClaimStatus_10.CodeListQualifierCode_04 = "LOI";
+                stc1.Date_02 = String.Format("{0:yyyyMMdd}", System.DateTime.UtcNow.AddDays(30));
+
+                stc1.HealthCareClaimStatus_10 = new C043_HealthCareClaimStatus();
+                stc1.HealthCareClaimStatus_10.HealthCareClaimStatusCategoryCode_01 = "R4";
+                stc1.HealthCareClaimStatus_10.StatusCode_02 = "18594-2";//"18803-7";
+                stc1.HealthCareClaimStatus_10.CodeListQualifierCode_04 = "LOI";
+            }
+            //end of the list request
+
             // stc1.HealthCareClaimStatus_11 = "";
             loop2200D.AllREF = new All_REF_277();
             loop2200D.AllREF.REF_PatientControlNumber = new REF_PatientControlNumber();
@@ -180,7 +193,13 @@ namespace CAEPOC.Controllers
             return _cAERepository.GetLOINCCode4CPTCode(CptCode);//.Result.FirstOrDefault().ToString();
         }
 
-        private TS277 Get277(Edi.Templates.Hipaa5010.TS837P ts837Data=null)
+
+        private Task<List<string>> GetRequestCodes(string CptCode)
+        {
+            return _cAERepository.GetRequestCodes(CptCode);//.Result.FirstOrDefault().ToString();
+        }
+
+        private (TS277,long) Get277(Edi.Templates.Hipaa5010.TS837P ts837Data=null)
         {
             TS277 input277Data = new TS277();
             input277Data = FetchData277(ts837Data);
@@ -198,7 +217,7 @@ namespace CAEPOC.Controllers
             //    var ediString = stream.LoadToString();
             //    return ediString;
             //}
-            return transaction;
+            return (transaction,cntlNum);
 
         }
 

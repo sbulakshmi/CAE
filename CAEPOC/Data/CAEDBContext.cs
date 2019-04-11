@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace CAEPOC.Data
 {
-    public class CAEDBContext: ICAEDBContext
+    public class CAEDBContext : ICAEDBContext
     {
         private readonly IMongoDatabase _database = null;
         public CAEDBContext(IOptions<Settings> settings, IMongoClient client)
         {
             //var client = new MongoClient(settings.Value.ConnectionString);
             //if (client != null)
-                _database = client.GetDatabase(settings.Value.Database);
+            _database = client.GetDatabase(settings.Value.Database);
         }
         public IMongoCollection<Edi.Templates.Hipaa5010.TS837P> T837PClaims
         {
@@ -45,6 +45,14 @@ namespace CAEPOC.Data
             get
             {
                 return _database.GetCollection<Counter>("Counter");
+            }
+        }
+
+        public IMongoCollection<CustomCPTLoincMapping> CustomCPTLoincMappings
+        {
+            get
+            {
+                return _database.GetCollection<CustomCPTLoincMapping>("CustomCPTLoincMappings");
             }
         }
     }

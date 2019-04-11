@@ -14,5 +14,7 @@ namespace CAEPOC.Interfaces
 
         IMongoCollection<EdiFabric.Templates.Hipaa5010.TS277> T277 { get; }
         IMongoCollection<Counter> Counters { get; }
+        IMongoCollection<CustomCPTLoincMapping> CustomCPTLoincMappings { get; }
+        
     }
 }
