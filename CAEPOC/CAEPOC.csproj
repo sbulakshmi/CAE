@@ -11,6 +11,7 @@
   <ItemGroup>
     <PackageReference Include="ediFabric.Core" Version="9.8.3" />
     <PackageReference Include="ediFabric.Framework" Version="9.8.3" />
+    <PackageReference Include="HL7-dotnetcore" Version="2.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />

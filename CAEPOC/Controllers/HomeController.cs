@@ -15,6 +15,7 @@ using EdiFabric.Framework.Writers;
 using CAE.Helpers.X12;
 using EdiFabric.Templates.Hipaa5010;
 using CAEPOC.Interfaces;
+using HL7.Dotnetcore;
 //using MongoDB.Driver;
 //using Microsoft.Extensions.Options;
 //using MongoDB.Bson;
@@ -52,6 +53,45 @@ namespace CAEPOC.Controllers
 
 
             return View();
+        }
+        public string ParseHL7()
+        {
+            var hl7Stream = System.IO.File.OpenRead(Path.Combine(_hostingEnvironment.WebRootPath, @"Files.Demo\hl7Sample.txt"));
+            Message message = new Message(hl7Stream.LoadToString());
+            bool isParsed = false;
+            try
+            {
+                isParsed = message.ParseMessage();
+                if (isParsed)
+                {
+                    List<Segment> segList = message.Segments();
+
+                    //OBX
+                    List<Segment> OBXList = message.Segments("OBX");
+
+                    foreach (Segment seg in OBXList)
+                    {
+                        if ((seg.Fields(2).Value == "CE" || seg.Fields(2).Value == "SN") && seg.Fields(3).IsComponentized && seg.Fields(5).IsComponentized)
+                        {
+                            //bool isRepeated = seg.Fields(3).HasRepetitions;
+                            //code - 3 (1,3)
+                            var OBXId = seg.Fields(3).Components()[0];
+                            var OBXIdCode = seg.Fields(3).Components()[3];
+                            //value - 5 (1,3)
+                            var OBXVal = seg.Fields(5).Components()[0];
+                            var OBXValCode = seg.Fields(5).Components()[3];
+
+                        }
+                    }
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception
+                throw ex;
+            }
+            return string.Empty;
         }
         public IActionResult POC()
         {
